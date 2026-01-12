@@ -1,40 +1,29 @@
-import { jsxLocPlugin } from "@builder.io/vite-plugin-jsx-loc";
-import tailwindcss from "@tailwindcss/vite";
-import react from "@vitejs/plugin-react";
 import path from "path";
 import { defineConfig } from "vite";
-import { vitePluginManusRuntime } from "vite-plugin-manus-runtime";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 
-const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime()];
-
+// Configuração limpa para Vercel
 export default defineConfig({
-  plugins,
+  plugins: [
+    react(),
+    tailwindcss()
+  ],
   resolve: {
     alias: {
-      "@": path.resolve(import.meta.dirname, "client", "src"),
-      "@shared": path.resolve(import.meta.dirname, "shared"),
-      "@assets": path.resolve(import.meta.dirname, "attached_assets"),
+      "@": path.resolve(__dirname, "client", "src"),
     },
   },
-  envDir: path.resolve(import.meta.dirname),
-  root: path.resolve(import.meta.dirname, "client"),
+  // Define a raiz do código fonte como a pasta 'client'
+  root: path.resolve(__dirname, "client"),
   build: {
-    // Vercel expects the output in 'dist' at the project root by default
-    outDir: path.resolve(import.meta.dirname, "dist"),
+    // Define a saída para a pasta 'dist' na raiz do projeto (fora de client)
+    outDir: path.resolve(__dirname, "dist"),
     emptyOutDir: true,
+    sourcemap: false,
   },
   server: {
     port: 3000,
-    strictPort: false,
     host: true,
-    allowedHosts: [
-      ".manuspre.computer",
-      ".manus.computer",
-      ".manus-asia.computer",
-      ".manuscomputer.ai",
-      ".manusvm.computer",
-      "localhost",
-      "127.0.0.1",
-    ],
-  },
+  }
 });
